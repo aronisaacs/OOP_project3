@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * A package-private class of the package image.
+ * A package-private class of the package main.image.
  * @author Dan Nirel
  */
 public class Image {
