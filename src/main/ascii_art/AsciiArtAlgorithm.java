@@ -118,18 +118,18 @@ public class AsciiArtAlgorithm {
     // Helper: recomputes brightness grid based on current resolution
     private double[][] computeBrightnessGrid() {
         int tilesPerRow = resolution;
-        int tileWidth = image.getWidth() / tilesPerRow;
-        int tileHeight = tileWidth; // square tiles
+        int tileDimension = image.getWidth() / tilesPerRow;
+        // square tiles
 
-        int rows = image.getHeight() / tileHeight;
+        int rows = image.getHeight() / tileDimension;
         double[][] grid = new double[rows][tilesPerRow];
 
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < tilesPerRow; col++) {
-                int startX = col * tileWidth;
-                int startY = row * tileHeight;
+                int startX = col * tileDimension;
+                int startY = row * tileDimension;
                 grid[row][col] = ImageProcessor.computeBrightness(
-                        image, startY, startX, tileWidth, tileHeight,
+                        image, startY, startX, tileDimension,
                         ImageProcessor.DEFAULT_BRIGHTNESS);
             }
         }

@@ -62,11 +62,10 @@ public class ImageProcessor {
      * Computes the average brightness of a rectangular region of the image.
      * Brightness is calculated using the given function, normalized to [0,1].
      *
-     * @param img the source image
-     * @param startY top-left row index
-     * @param startX top-left column index
-     * @param tileWidth width of the region
-     * @param tileHeight height of the region
+     * @param img                the source image
+     * @param startY             top-left row index
+     * @param startX             top-left column index
+     * @param tileDimension          width of the region
      * @param brightnessFunction function mapping a Color to a brightness value in [0,255]
      * @return average brightness in [0,1]
      */
@@ -74,20 +73,19 @@ public class ImageProcessor {
             Image img,
             int startY,
             int startX,
-            int tileWidth,
-            int tileHeight,
+            int tileDimension,
             Function<Color, Double> brightnessFunction) {
 
         double sum = 0.0;
 
-        for (int y = startY; y < startY + tileHeight; y++) {
-            for (int x = startX; x < startX + tileWidth; x++) {
+        for (int y = startY; y < startY + tileDimension; y++) {
+            for (int x = startX; x < startX + tileDimension; x++) {
                 Color pixel = img.getPixel(y, x);
                 sum += brightnessFunction.apply(pixel);
             }
         }
 
-        return sum / (tileWidth * tileHeight * 255.0);
+        return sum / (tileDimension * tileDimension * 255.0);
     }
 
 
