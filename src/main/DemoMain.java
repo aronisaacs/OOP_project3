@@ -22,6 +22,7 @@ public class DemoMain {
         }
     }
 
+
     private static AsciiArtAlgorithm getAsciiArtAlgorithm() throws IOException {
         String filename = "examples/small_portrait.jpeg"; // <-- put your test file here
         Image img = new Image(filename);
