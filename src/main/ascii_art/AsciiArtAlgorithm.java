@@ -46,7 +46,7 @@ public class AsciiArtAlgorithm {
      * @param resolution number of characters per row
      * @throws IllegalArgumentException if resolution is invalid
      */
-    public void setResolution(int resolution) {
+    private void setResolution(int resolution) {
         if (resolution <= 0) {
             throw new IllegalArgumentException("Resolution must be positive");
         }
@@ -63,7 +63,7 @@ public class AsciiArtAlgorithm {
     /**
      * Returns the current resolution.
      */
-    public int getResolution() {
+    private int getResolution() {
         return resolution;
     }
 
@@ -76,6 +76,7 @@ public class AsciiArtAlgorithm {
      * @throws IllegalStateException if charset is too small
      */
     public char[][] run() {
+        //todo: check if we should allow this getter at all.
         if (matcher.getCharset().size() < 2) {
             throw new IllegalStateException("Charset is too small");
         }
@@ -110,7 +111,7 @@ public class AsciiArtAlgorithm {
 
         return ascii;
     }
-    public void setReverseBrightness(boolean reverse) {
+    private void setReverseBrightness(boolean reverse) {
         this.reverseBrightness = reverse;
     }
     // Helper: recomputes brightness grid based on current resolution

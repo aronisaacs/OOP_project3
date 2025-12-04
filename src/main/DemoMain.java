@@ -25,19 +25,20 @@ public class DemoMain {
 
 
     private static AsciiArtAlgorithm getAsciiArtAlgorithm() throws IOException {
-        String filename = "examples/small_portrait.jpeg"; // <-- put your test file here
+        String filename = "examples/board.jpeg"; // <-- put your test file here
         Image img = new Image(filename);
 
         // 2. Initialize charset matcher with a basic set
-        char[] fullCharset = new char[95];
-        for (int i = 32; i <= 126; i++) {
-            fullCharset[i - 32] = (char) i;
-        }
+//        char[] fullCharset = new char[95];
+//        for (int i = 32; i <= 126; i++) {
+//            fullCharset[i - 32] = (char) i;
+//        }
+        char[] fullCharset = {'m', 'o'};
 
         SubImgCharMatcher matcher = new SubImgCharMatcher(fullCharset);
 
         // 3. Create the algorithm with resolution (must be power of 2 ≤ image width)
-        int resolution = 512; // adjust depending on your image size
+        int resolution = 2; // adjust depending on your image size
         AsciiArtAlgorithm algo = new AsciiArtAlgorithm(img, matcher, resolution);
         return algo;
     }

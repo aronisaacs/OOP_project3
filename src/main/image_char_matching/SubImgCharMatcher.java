@@ -128,6 +128,7 @@ public class SubImgCharMatcher {
      *
      * @return set of characters currently in the matcher
      */
+    //todo this is added API!! we need to comment about it.
     public Set<Character> getCharset() {
         return new HashSet<>(charToRawBrightness.keySet());
     }
