@@ -18,7 +18,7 @@ public class AsciiArtAlgorithm {
     private final Image image;                 // the padded image (fixed after construction)
     private final SubImgCharMatcher matcher;   // character matcher (mutable externally)
     private int resolution;                    // number of characters per row
-    private RoundingMethod rounding;           // rounding mode
+    private boolean reverseBrightness = false;
 
     // Cached brightness grid (recomputed only when resolution changes)
     private double[][] brightnessGrid;
@@ -35,7 +35,6 @@ public class AsciiArtAlgorithm {
     public AsciiArtAlgorithm(Image image, SubImgCharMatcher matcher, int resolution) {
         this.image = ImageProcessor.padToPowerOfTwo(image);
         this.matcher = matcher;
-        this.rounding = RoundingMethod.ABS; // sensible default
         setResolution(resolution); // validates and sets
         this.brightnessGrid = null;
     }
@@ -68,25 +67,7 @@ public class AsciiArtAlgorithm {
         return resolution;
     }
 
-    /**
-     * Sets the rounding method for mapping brightness to characters.
-     *
-     * @param method rounding method (must not be null)
-     * @throws IllegalArgumentException if method is null
-     */
-    public void setRoundingMethod(RoundingMethod method) {
-        if (method == null) {
-            throw new IllegalArgumentException("Rounding method must not be null");
-        }
-        this.rounding = method;
-    }
 
-    /**
-     * Returns the current rounding method.
-     */
-    public RoundingMethod getRoundingMethod() {
-        return rounding;
-    }
 
     /**
      * Runs the algorithm using the current resolution, charset, and rounding method.
@@ -99,22 +80,39 @@ public class AsciiArtAlgorithm {
             throw new IllegalStateException("Charset is too small");
         }
 
-        // Compute brightness if cache invalid
+        // Recompute brightness grid if needed
         if (brightnessGrid == null) {
             brightnessGrid = computeBrightnessGrid();
         }
 
-        // Map brightness to characters
-        char[][] ascii = new char[brightnessGrid.length][brightnessGrid[0].length];
-        for (int row = 0; row < brightnessGrid.length; row++) {
-            for (int col = 0; col < brightnessGrid[row].length; col++) {
-                ascii[row][col] = matcher.getCharByBrightness(
-                        brightnessGrid[row][col], rounding);
+        // Determine brightness source (normal or reversed)
+        double[][] source = brightnessGrid;
+
+        if (reverseBrightness) {
+            double[][] reversed = new double[source.length][source[0].length];
+            for (int r = 0; r < source.length; r++) {
+                for (int c = 0; c < source[r].length; c++) {
+                    reversed[r][c] = 1.0 - source[r][c];
+                }
+            }
+            source = reversed;
+        }
+
+        // Allocate output ASCII matrix
+        char[][] ascii = new char[source.length][source[0].length];
+
+        // Map brightness to characters — clean, no branching inside loop
+        for (int row = 0; row < source.length; row++) {
+            for (int col = 0; col < source[row].length; col++) {
+                ascii[row][col] = matcher.getCharByImageBrightness(source[row][col]);
             }
         }
+
         return ascii;
     }
-
+    public void setReverseBrightness(boolean reverse) {
+        this.reverseBrightness = reverse;
+    }
     // Helper: recomputes brightness grid based on current resolution
     private double[][] computeBrightnessGrid() {
         int tilesPerRow = resolution;

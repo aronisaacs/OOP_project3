@@ -1,5 +1,4 @@
 import ascii_art.AsciiArtAlgorithm;
-import ascii_art.RoundingMethod;
 import ascii_output.AsciiOutput;
 import image.Image;
 import image_char_matching.SubImgCharMatcher;
@@ -11,7 +10,6 @@ public class DemoMain {
         try {
             // 1. Load image from file
             AsciiArtAlgorithm algo = getAsciiArtAlgorithm();
-            algo.setRoundingMethod(RoundingMethod.ABS);
 
             // 4. Run the algorithm
             char[][] ascii = algo.run();
@@ -25,7 +23,7 @@ public class DemoMain {
     }
 
     private static AsciiArtAlgorithm getAsciiArtAlgorithm() throws IOException {
-        String filename = "cat.jpeg"; // <-- put your test file here
+        String filename = "examples/small_portrait.jpeg"; // <-- put your test file here
         Image img = new Image(filename);
 
         // 2. Initialize charset matcher with a basic set

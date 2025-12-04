@@ -1,6 +1,5 @@
 package image_char_matching;
 
-import ascii_art.RoundingMethod;
 import java.util.*;
 import java.util.function.Function;
 
@@ -26,13 +25,13 @@ public class SubImgCharMatcher {
      * Constructs a matcher with the given initial character set.
      * All characters must be printable ASCII characters (32 to 126).
      *
-     * @param initialCharset array of characters to initialize the matcher with
+     * @param charset array of characters to initialize the matcher with
      * @throws IllegalArgumentException if any character is not printable ASCII
      * @throws NullPointerException if initialCharset is null
      */
-    public SubImgCharMatcher(char[] initialCharset) {
-        Objects.requireNonNull(initialCharset, "Initial charset must not be null");
-        for (char c : initialCharset) {
+    public SubImgCharMatcher(char[] charset) {
+        Objects.requireNonNull(charset, "Initial charset must not be null");
+        for (char c : charset) {
             addChar(c);
         }
         updateNormalizationFunction();
@@ -58,7 +57,7 @@ public class SubImgCharMatcher {
         int whitePixels = 0;
         for (boolean[] row : matrix) {
             for (boolean pixel : row) {
-                if (!pixel) whitePixels++;
+                if (pixel) whitePixels++;
             }
         }
 
@@ -102,44 +101,26 @@ public class SubImgCharMatcher {
      * Returns the character whose brightness best matches the given normalized brightness value,
      * according to the specified rounding method.
      *
-     * @param normBrightness brightness in [0,1]
-     * @param method rounding method to use (ABS, UP, DOWN)
+     * @param brightness brightness in [0,1]
      * @return closest matching character
      * @throws IllegalStateException if charset is empty
      * @throws IllegalArgumentException if rounding method is unrecognized or null
      * @throws NullPointerException if method is null
      */
-    public char getCharByBrightness(double normBrightness, RoundingMethod method) {
-        Objects.requireNonNull(method, "Rounding method must not be null");
-
+    public char getCharByImageBrightness(double brightness) {
         if (charToRawBrightness.isEmpty()) {
             throw new IllegalStateException("Charset is empty");
         }
 
-        int rawQuery = normalizedToRaw.apply(normBrightness);
+        int rawQuery = normalizedToRaw.apply(brightness);
 
         Integer floor = rawBrightnessMap.floorKey(rawQuery);
         Integer ceil = rawBrightnessMap.ceilingKey(rawQuery);
-
-        switch (method) {
-            case ABS:
-                if (floor == null) return rawBrightnessMap.get(ceil).first();
-                if (ceil == null) return rawBrightnessMap.get(floor).first();
-                int dFloor = Math.abs(floor - rawQuery);
-                int dCeil = Math.abs(ceil - rawQuery);
-                return (dFloor <= dCeil) ? rawBrightnessMap.get(floor).first() : rawBrightnessMap.get(ceil).first();
-
-            case DOWN:
-                if (floor == null) floor = rawBrightnessMap.firstKey();
-                return rawBrightnessMap.get(floor).first();
-
-            case UP:
-                if (ceil == null) ceil = rawBrightnessMap.lastKey();
-                return rawBrightnessMap.get(ceil).first();
-
-            default:
-                throw new IllegalArgumentException("Unknown rounding method: " + method);
-        }
+        if (floor == null) return rawBrightnessMap.get(ceil).first();
+        if (ceil == null) return rawBrightnessMap.get(floor).first();
+        int dFloor = Math.abs(floor - rawQuery);
+        int dCeil = Math.abs(ceil - rawQuery);
+        return (dFloor <= dCeil) ? rawBrightnessMap.get(floor).first() : rawBrightnessMap.get(ceil).first();
     }
 
     /**
