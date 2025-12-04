@@ -3,38 +3,112 @@ package ascii_art;
 import image.Image;
 import image_char_matching.SubImgCharMatcher;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class ShellState {
-    private static final int DEFAULT_CHARS = 10;
     private static final int DEFAULT_RESOLUTION = 2;
+    private static final char[] DEFAULT_CHARSET = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
 
     private final Image image;
-    private final int maxCharsinRow;
-    private final int minCharsinRow;
+    private final int maxCharsInRow;
+    private final int minCharsInRow;
 
-    private SubImgCharMatcher subImgCharMatcher;
-    private int charsInRow;
+    private SubImgCharMatcher subImgCharMatcher = new SubImgCharMatcher(DEFAULT_CHARSET);
     private int resolution = DEFAULT_RESOLUTION;
-    private boolean reverseMode;
-//    private OutputMode outputMode;
-    private Set<Character> charSet;
+    private boolean reverseMode = false; //true if reverse mode is on, false otherwise
+    private OutputMode outputMode = OutputMode.CONSOLE;
 
+    /**
+     * Constructs a ShellState with the given image and default settings.
+     * @param image the image to be processed
+     */
     public ShellState(Image image){
         this.image = image;
-        this.maxCharsinRow = calculateMaxCharsInRow();
-        this.minCharsinRow = calculateMinCharsInRow();
-        charSet = new HashSet<>();
-        for(int i = 0; i < DEFAULT_CHARS; i++){
-            char c = (char)i;
-            charSet.add(c);
-        }
+        maxCharsInRow = calculateMaxCharsInRow();
+        minCharsInRow = calculateMinCharsInRow();
     }
     private int calculateMaxCharsInRow() {
         return image.getWidth();
     }
     private int calculateMinCharsInRow() {
         return Math.max(1, image.getWidth()/ image.getHeight());
+    }
+
+    /**
+     * Gets the max chars in row.
+     * @return the max chars in row
+     */
+    public int getMaxCharsInRow() {
+        return maxCharsInRow;
+    }
+
+    /**
+     * Gets the min chars in row.
+     * @return the min chars in row
+     */
+    public int getMinCharsInRow() {
+        return minCharsInRow;
+    }
+
+    /**
+     * Gets the SubImgCharMatcher.
+     * @return the SubImgCharMatcher
+     */
+    public SubImgCharMatcher getSubImgCharMatcher() {
+        return subImgCharMatcher;
+    }
+
+    /**
+     * Sets the SubImgCharMatcher.
+     * @param subImgCharMatcher the SubImgCharMatcher to set
+     */
+    public void setSubImgCharMatcher(SubImgCharMatcher subImgCharMatcher) {
+        this.subImgCharMatcher = subImgCharMatcher;
+    }
+
+    /**
+     * Gets the resolution
+     * @return the resolution
+     */
+    public int getResolution() {
+        return resolution;
+    }
+
+    /**
+     * Sets the resolution
+     * @param resolution the resolution to set
+     */
+    public void setResolution(int resolution) {
+        this.resolution = resolution;
+    }
+
+    /**
+     * gets the output mode
+     * @return the output mode (enum OutputMode) console or HTML
+     */
+    public OutputMode getOutputMode() {
+        return outputMode;
+    }
+
+    /**
+     * sets the output mode
+     * @param outputMode the output mode to set (enum OutputMode) console or HTML
+     */
+    public void setOutputMode(OutputMode outputMode) {
+        this.outputMode = outputMode;
+    }
+
+    /**
+     * checks if reverse mode is on
+     * @return true if reverse mode is on, false otherwise
+     */
+    public boolean isReverseMode() {
+        return reverseMode;
+    }
+
+    /**
+     * sets the reverse mode
+     * @param reverseMode true to set reverse mode on, false to set it off
+     */
+    public void setReverseMode(boolean reverseMode) {
+        this.reverseMode = reverseMode;
     }
 }

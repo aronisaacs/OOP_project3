@@ -79,7 +79,7 @@ public class SubImgCharMatcher {
      */
     public void removeChar(char c) {
         if (!charToRawBrightness.containsKey(c)) {
-            throw new IllegalArgumentException("Character not in charset: '" + c + "'");
+            return;
         }
 
         int brightness = charToRawBrightness.get(c);
@@ -125,12 +125,11 @@ public class SubImgCharMatcher {
 
     /**
      * Returns a copy of the current charset.
-     *
-     * @return set of characters currently in the matcher
+     * @return TreeSet of characters currently in the matcher
      */
     //todo this is added API!! we need to comment about it.
-    public Set<Character> getCharset() {
-        return new HashSet<>(charToRawBrightness.keySet());
+    public TreeSet<Character> getCharset() {
+        return new TreeSet<>(charToRawBrightness.keySet());
     }
 
     /**
