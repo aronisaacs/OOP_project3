@@ -39,7 +39,7 @@ public class DemoMain {
 
         // 3. Create the algorithm with resolution (must be power of 2 ≤ image width)
         int resolution = 2; // adjust depending on your image size
-        AsciiArtAlgorithm algo = new AsciiArtAlgorithm(img, matcher, resolution);
+        AsciiArtAlgorithm algo = new AsciiArtAlgorithm(img, matcher, resolution, false);
         return algo;
     }
 }

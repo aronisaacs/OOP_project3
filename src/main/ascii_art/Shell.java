@@ -77,7 +77,6 @@ public class Shell {
             this.shellState = new ShellState(image);
             return true;
         } catch (IOException e) {
-//            System.out.println("Error loading image");
             return false;
         }
     }

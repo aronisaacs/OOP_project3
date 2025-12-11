@@ -18,7 +18,7 @@ public class AsciiArtAlgorithm {
     private final Image image;                 // the padded image (fixed after construction)
     private final SubImgCharMatcher matcher;   // character matcher (mutable externally)
     private int resolution;                    // number of characters per row
-    private boolean reverseBrightness = false;
+    private boolean reverseBrightness; //false by default, true if brightness must be reversed
 
     // Cached brightness grid (recomputed only when resolution changes)
     private double[][] brightnessGrid;
@@ -32,11 +32,13 @@ public class AsciiArtAlgorithm {
      * @param resolution number of characters per row (must be a power of two)
      * @throws IllegalArgumentException if resolution is invalid
      */
-    public AsciiArtAlgorithm(Image image, SubImgCharMatcher matcher, int resolution) {
+    public AsciiArtAlgorithm(Image image, SubImgCharMatcher matcher, int resolution,
+                             boolean reverseBrightness) {
         this.image = ImageProcessor.padToPowerOfTwo(image);
         this.matcher = matcher;
         setResolution(resolution); // validates and sets
         this.brightnessGrid = null;
+        this.reverseBrightness = reverseBrightness;
     }
 
     /**
@@ -60,14 +62,6 @@ public class AsciiArtAlgorithm {
         this.brightnessGrid = null; // invalidate cache
     }
 
-    /**
-     * Returns the current resolution.
-     */
-    private int getResolution() {
-        return resolution;
-    }
-
-
 
     /**
      * Runs the algorithm using the current resolution, charset, and rounding method.
@@ -76,9 +70,8 @@ public class AsciiArtAlgorithm {
      * @throws IllegalStateException if charset is too small
      */
     public char[][] run() {
-        //todo: check if we should allow this getter at all.
         if (matcher.getCharset().size() < 2) {
-            throw new IllegalStateException("Charset is too small");
+            throw new IllegalStateException("Did not execute. Charset is too small.");
         }
 
         // Recompute brightness grid if needed
@@ -111,9 +104,9 @@ public class AsciiArtAlgorithm {
 
         return ascii;
     }
-    private void setReverseBrightness(boolean reverse) {
-        this.reverseBrightness = reverse;
-    }
+//    private void setReverseBrightness(boolean reverse) {
+//        this.reverseBrightness = reverse;
+//    }
     // Helper: recomputes brightness grid based on current resolution
     private double[][] computeBrightnessGrid() {
         int tilesPerRow = resolution;

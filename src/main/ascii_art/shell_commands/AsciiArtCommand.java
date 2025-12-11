@@ -12,10 +12,14 @@ public class AsciiArtCommand implements ShellCommand {
         //check if the charset is too small
         checkCharSetSize(shellState.getCharSetSize());
 
+        //deal with reverse mode
+
         //generate the ascii art
-        AsciiArtAlgorithm algorithm = new AsciiArtAlgorithm(shellState.getImg(), shellState.getSubImgCharMatcher(), shellState.getResolution());
+        AsciiArtAlgorithm algorithm = new AsciiArtAlgorithm(shellState.getImg(),
+                shellState.getSubImgCharMatcher(), shellState.getResolution(), shellState.isReverseMode());
         char[][] twoDimensionArt = algorithm.run();
-        //choose output method
+
+        //use correct output method
         AsciiOutput output;
         if(shellState.getOutputMode() == OutputMode.HTML){
             output = new HtmlAsciiOutput("output.html", "Courier New");
