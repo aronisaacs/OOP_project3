@@ -12,6 +12,7 @@ public class ReverseCommand implements ShellCommand {
      */
     @Override
     public void execute(String[] args, ascii_art.ShellState shellState) {
-        shellState.setReverseMode(true);
+        //returns true already in reverse mode
+        shellState.setReverseMode(!shellState.getReverseMode());
     }
 }

@@ -15,6 +15,7 @@ public class ShellState {
     private int resolution = DEFAULT_RESOLUTION;
     private boolean reverseMode = false; //true if reverse mode is on, false otherwise and by default
     private OutputMode outputMode = OutputMode.CONSOLE;
+    private double[][] cachedBrightnessGrid = null;
 
     /**
      * Constructs a ShellState with the given image and default settings.
@@ -72,7 +73,9 @@ public class ShellState {
      * @param resolution the resolution to set
      */
     public void setResolution(int resolution) {
+
         this.resolution = resolution;
+        this.cachedBrightnessGrid = null; // invalidate cache
     }
 
     /**
@@ -106,6 +109,13 @@ public class ShellState {
     public void setReverseMode(boolean reverseMode) {
         this.reverseMode = reverseMode;
     }
+    /**
+     * gets the reverse mode
+     * @return the reverse mode
+     */
+    public boolean getReverseMode() {
+        return reverseMode;
+    }
 
     /**
      * gets the image
@@ -114,4 +124,20 @@ public class ShellState {
     public Image getImg() {
         return image;
     }
+    /**
+     * gets the cached brightness grid
+     * @return the cached brightness grid
+     */
+    public double[][] getCachedBrightnessGrid() {
+        return cachedBrightnessGrid;
+    }
+    /**
+     * sets the cached brightness grid
+     * @param cachedBrightnessGrid the cached brightness grid to set
+     */
+    public void setCachedBrightnessGrid(double[][] cachedBrightnessGrid) {
+        this.cachedBrightnessGrid = cachedBrightnessGrid;
+    }
+
+
 }

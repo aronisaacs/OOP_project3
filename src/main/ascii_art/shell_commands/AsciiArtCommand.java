@@ -8,29 +8,41 @@ import ascii_output.HtmlAsciiOutput;
 
 public class AsciiArtCommand implements ShellCommand {
     @Override
-    public void execute(String[] args, ascii_art.ShellState shellState) throws ShellException{
+    public void execute(String[] args, ascii_art.ShellState shellState) throws ShellException {
         //check if the charset is too small
-        checkCharSetSize(shellState.getCharSetSize());
+        //TODO: the ascii art algorithm should handle this
+//        checkCharSetSize(shellState.getCharSetSize());
 
-        //deal with reverse mode
+        double[][] cachedGrid = shellState.getCachedBrightnessGrid();
 
-        //generate the ascii art
-        AsciiArtAlgorithm algorithm = new AsciiArtAlgorithm(shellState.getImg(),
-                shellState.getSubImgCharMatcher(), shellState.getResolution(), shellState.isReverseMode());
-        char[][] twoDimensionArt = algorithm.run();
+        try {
+            //generate the ascii art algorithm with the current shell state
+            AsciiArtAlgorithm algorithm = new AsciiArtAlgorithm(shellState.getImg(),
+                    shellState.getSubImgCharMatcher(),
+                    shellState.getResolution(),
+                    shellState.isReverseMode(),
+                    cachedGrid,
+                    shellState::setCachedBrightnessGrid); //pass method reference for caching
 
-        //use correct output method
-        AsciiOutput output;
-        if(shellState.getOutputMode() == OutputMode.HTML){
-            output = new HtmlAsciiOutput("output.html", "Courier New");
-        } else {
-            output = new ConsoleAsciiOutput();
+            char[][] twoDimensionArt = algorithm.run();
+
+            //use correct output method
+            AsciiOutput output;
+            if (shellState.getOutputMode() == OutputMode.HTML) {
+                output = new HtmlAsciiOutput("output.html", "Courier New");
+            } else {
+                output = new ConsoleAsciiOutput();
+            }
+
+            //generate the output with the ascii art and relevant output method
+            output.out(twoDimensionArt);
+        } catch (IllegalStateException e) {
+            throw new ShellException(e.getMessage());
         }
-        output.out(twoDimensionArt);
     }
-    private void checkCharSetSize(int size) throws ShellException{
-        if (size < 2){
-            throw new ShellException("Did not execute. Charset is too small.");
-        }
-    }
+//    private void checkCharSetSize(int size) throws ShellException{
+//        if (size < 2){
+//            throw new ShellException("Did not execute. Charset is too small.");
+//        }
+//    }
 }

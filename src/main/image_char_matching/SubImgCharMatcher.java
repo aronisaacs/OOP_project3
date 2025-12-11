@@ -100,7 +100,6 @@ public class SubImgCharMatcher {
     /**
      * Returns the character whose brightness best matches the given normalized brightness value,
      * according to the specified rounding method.
-     *
      * @param brightness brightness in [0,1]
      * @return closest matching character
      * @throws IllegalStateException if charset is empty
@@ -111,6 +110,7 @@ public class SubImgCharMatcher {
         if (charToRawBrightness.isEmpty()) {
             throw new IllegalStateException("Charset is empty");
         }
+//        double effectiveBrightness = reverse ? (1.0 - brightness) : brightness;
 
         int rawQuery = normalizedToRaw.apply(brightness);
 

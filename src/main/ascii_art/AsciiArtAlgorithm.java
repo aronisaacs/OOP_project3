@@ -7,10 +7,8 @@ import image_char_matching.SubImgCharMatcher;
 /**
  * The AsciiArtAlgorithm class coordinates the process of converting an image
  * into ASCII art using a given charset and resolution.
- *
  * It separates image preprocessing (computing brightness grid) from character
  * mapping, so that brightness is only recalculated when resolution changes.
- *
  * Charset changes are handled externally via the SubImgCharMatcher object.
  */
 public class AsciiArtAlgorithm {
@@ -18,10 +16,11 @@ public class AsciiArtAlgorithm {
     private final Image image;                 // the padded image (fixed after construction)
     private final SubImgCharMatcher matcher;   // character matcher (mutable externally)
     private int resolution;                    // number of characters per row
-    private boolean reverseBrightness; //false by default, true if brightness must be reversed
+    private final boolean reverseBrightness; //false by default, true if brightness must be reversed
 
     // Cached brightness grid (recomputed only when resolution changes)
     private double[][] brightnessGrid;
+    private final java.util.function.Consumer<double[][]> cacheCallback;
 
     /**
      * Constructs an AsciiArtAlgorithm with the given image, matcher, and resolution.
@@ -32,13 +31,18 @@ public class AsciiArtAlgorithm {
      * @param resolution number of characters per row (must be a power of two)
      * @throws IllegalArgumentException if resolution is invalid
      */
-    public AsciiArtAlgorithm(Image image, SubImgCharMatcher matcher, int resolution,
-                             boolean reverseBrightness) {
+    public AsciiArtAlgorithm(Image image,
+                             SubImgCharMatcher matcher,
+                             int resolution,
+                             boolean reverseBrightness,
+                             double[][] initialBrightnessGrid,
+                             java.util.function.Consumer<double[][]> cacheCallback) {
         this.image = ImageProcessor.padToPowerOfTwo(image);
         this.matcher = matcher;
         setResolution(resolution); // validates and sets
-        this.brightnessGrid = null;
+        this.brightnessGrid = initialBrightnessGrid;
         this.reverseBrightness = reverseBrightness;
+        this.cacheCallback = cacheCallback;
     }
 
     /**
@@ -59,7 +63,6 @@ public class AsciiArtAlgorithm {
             throw new IllegalArgumentException("Resolution cannot exceed image width");
         }
         this.resolution = resolution;
-        this.brightnessGrid = null; // invalidate cache
     }
 
 
@@ -77,6 +80,10 @@ public class AsciiArtAlgorithm {
         // Recompute brightness grid if needed
         if (brightnessGrid == null) {
             brightnessGrid = computeBrightnessGrid();
+            //add the push callback here later
+            if (cacheCallback != null) {
+                cacheCallback.accept(brightnessGrid);
+            }
         }
 
         // Determine brightness source (normal or reversed)
