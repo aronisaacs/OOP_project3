@@ -29,7 +29,7 @@ public class Shell {
      *
      * @param args from the command line
      */
-    public static void main(String[] args) {
+     static void main(String[] args) {
         new Shell().run(args[0]);
     }
 
@@ -49,13 +49,7 @@ public class Shell {
         while (true) {
             System.out.print(">>> ");
             String line = KeyboardInput.readLine();
-            if(line == null){
-                break;
-            }
             line = line.trim();
-            if (line.isEmpty()){
-                continue;
-            }
             String[] tokens = line.split("\\s+");
             String commandName = tokens[0];
             //exit shortcut

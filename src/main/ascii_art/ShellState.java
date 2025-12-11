@@ -11,9 +11,9 @@ public class ShellState {
     private final int maxCharsInRow;
     private final int minCharsInRow;
 
-    private SubImgCharMatcher subImgCharMatcher = new SubImgCharMatcher(DEFAULT_CHARSET);
+    private final SubImgCharMatcher subImgCharMatcher = new SubImgCharMatcher(DEFAULT_CHARSET);
     private int resolution = DEFAULT_RESOLUTION;
-    private boolean reverseMode = false; //true if reverse mode is on, false otherwise
+    private boolean reverseMode = false; //true if reverse mode is on, false otherwise and by default
     private OutputMode outputMode = OutputMode.CONSOLE;
 
     /**
@@ -56,14 +56,9 @@ public class ShellState {
         return subImgCharMatcher;
     }
 
-    /**
-     * Sets the SubImgCharMatcher.
-     * @param subImgCharMatcher the SubImgCharMatcher to set
-     */
-    public void setSubImgCharMatcher(SubImgCharMatcher subImgCharMatcher) {
-        this.subImgCharMatcher = subImgCharMatcher;
+    public int getCharSetSize() {
+        return subImgCharMatcher.getCharset().size();
     }
-
     /**
      * Gets the resolution
      * @return the resolution
@@ -110,5 +105,13 @@ public class ShellState {
      */
     public void setReverseMode(boolean reverseMode) {
         this.reverseMode = reverseMode;
+    }
+
+    /**
+     * gets the image
+     * @return the image
+     */
+    public Image getImg() {
+        return image;
     }
 }
