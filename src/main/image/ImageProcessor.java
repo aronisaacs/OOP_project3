@@ -27,34 +27,76 @@ public class ImageProcessor {
      * @param img the original image
      * @return a new Image whose dimensions are powers of two
      */
-    public static Image padToPowerOfTwo(Image img) {
+//    public static Image padToPowerOfTwo(Image img) {
+//        int width = img.getWidth();
+//        int height = img.getHeight();
+//
+//        int newWidth = nextPowerOfTwo(width);
+//        int newHeight = nextPowerOfTwo(height);
+//
+//		int offsetX = (newWidth - width) / 2;
+//		int offsetY = (newHeight - height) / 2;
+//
+//
+//		// If already power of two, return original
+//        if (newWidth == width && newHeight == height) {
+//            return img;
+//        }
+//
+//        Color[][] newPixels = new Color[newHeight][newWidth];
+//
+//        // Fill original pixels
+//        for (int y = 0; y < height; y++) {
+//            for (int x = 0; x < width; x++) {
+//                newPixels[y][x] = img.getPixel(y, x);
+//            }
+//        }
+//
+//        // Fill padding with white
+//        Color white = new Color(255, 255, 255);
+//        for (int y = 0; y < newHeight; y++) {
+//            for (int x = 0; x < newWidth; x++) {
+//                if (y >= height || x >= width) {
+//                    newPixels[y][x] = white;
+//                }
+//            }
+//        }
+//
+//        return new Image(newPixels, newWidth, newHeight);
+//    }
+
+	    public static Image padToPowerOfTwo(Image img) {
         int width = img.getWidth();
         int height = img.getHeight();
 
         int newWidth = nextPowerOfTwo(width);
         int newHeight = nextPowerOfTwo(height);
 
-        // If already power of two, return original
+		int offsetX = (newWidth - width) / 2;
+		int offsetY = (newHeight - height) / 2;
+
+
+		// If already power of two, return original
         if (newWidth == width && newHeight == height) {
             return img;
         }
 
         Color[][] newPixels = new Color[newHeight][newWidth];
 
-        // Fill original pixels
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                newPixels[y][x] = img.getPixel(y, x);
-            }
-        }
+
 
         // Fill padding with white
         Color white = new Color(255, 255, 255);
         for (int y = 0; y < newHeight; y++) {
             for (int x = 0; x < newWidth; x++) {
-                if (y >= height || x >= width) {
-                    newPixels[y][x] = white;
-                }
+				if (y < offsetY || y >= offsetY + height ||
+						x < offsetX || x >= offsetX + width) {
+					// Outside original-image region → padding
+					newPixels[y][x] = white;
+				} else {
+					// Inside original-image region → copy shifted pixel
+					newPixels[y][x] = img.getPixel(y - offsetY, x - offsetX);
+				}
             }
         }
 
