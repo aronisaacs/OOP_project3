@@ -17,7 +17,7 @@ public class AsciiArtCommand implements ShellCommand {
      * Enables the asciiartalgorithm to use a cached brightness grid for optimization.
      * @param args the arguments for the command. args[0] is the command name, usually can be ignored.
      * @param shellState the current state of the shell
-     * @throws ShellException
+     * @throws ShellException for example if the char set is too small
      */
     @Override
     public void execute(String[] args, ascii_art.ShellState shellState) throws ShellException {
