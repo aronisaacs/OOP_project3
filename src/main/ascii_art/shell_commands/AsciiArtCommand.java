@@ -8,14 +8,17 @@ import ascii_output.HtmlAsciiOutput;
 
 /**
  * The AsciiArtCommand class implements the ShellCommand interface to generate ASCII art from an image.
- * It uses the AsciiArtAlgorithm to process the image and outputs the result using the specified output method.
+ * It uses the AsciiArtAlgorithm to process the image and outputs the result using the specified output
+ * method.
+ *
  * @author ron.stein
  */
 public class AsciiArtCommand implements ShellCommand {
 	/**
 	 * Executes the ASCII art generation command.
 	 * Enables the asciiartalgorithm to use a cached brightness grid for optimization.
-	 * @param args the arguments for the command. args[0] is the command name, usually can be ignored.
+	 *
+	 * @param args       the arguments for the command. args[0] is the command name, usually can be ignored.
 	 * @param shellState the current state of the shell
 	 * @throws ShellException for example if the char set is too small
 	 */

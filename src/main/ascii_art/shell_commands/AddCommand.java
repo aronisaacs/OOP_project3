@@ -4,6 +4,7 @@ import image_char_matching.SubImgCharMatcher;
 
 /**
  * A shell command that adds a new character mapping for ASCII art generation.
+ *
  * @author ron.stein
  */
 public class AddCommand implements ShellCommand {
