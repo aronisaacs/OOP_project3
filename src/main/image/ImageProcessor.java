@@ -6,10 +6,13 @@ import java.util.function.Function;
 /**
  * Utility class for image processing operations such as padding and brightness calculation.
  * Methods are static and do not modify the original image.
+ * @author aronisaacs
  */
 public class ImageProcessor {
 
-    // Default brightness function (luminance formula)
+    /**
+     *     Default brightness function (luminance formula)
+     */
     public static final Function<Color, Double> DEFAULT_BRIGHTNESS = c ->
             0.2126 * c.getRed() + 0.7152 * c.getGreen() + 0.0722 * c.getBlue();
 

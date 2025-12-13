@@ -3,18 +3,25 @@ package ascii_art;
 import image.Image;
 import image_char_matching.SubImgCharMatcher;
 
+/**
+ * The ShellState class represents the state of the shell for ASCII art generation.
+ * It holds the image to be processed, character matching settings, resolution,
+ * output mode, reverse mode, and cached brightness grid for optimization.
+ * @author ron.stein
+ */
 public class ShellState {
+    //Default settings
     private static final int DEFAULT_RESOLUTION = 2;
     private static final char[] DEFAULT_CHARSET = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+    private static final OutputMode DEFAULT_OUTPUT_MODE = OutputMode.CONSOLE;
 
     private final Image image;
     private final int maxCharsInRow;
     private final int minCharsInRow;
-
     private final SubImgCharMatcher subImgCharMatcher = new SubImgCharMatcher(DEFAULT_CHARSET);
     private int resolution = DEFAULT_RESOLUTION;
     private boolean reverseMode = false; //true if reverse mode is on, false otherwise and by default
-    private OutputMode outputMode = OutputMode.CONSOLE;
+    private OutputMode outputMode = DEFAULT_OUTPUT_MODE;
     private double[][] cachedBrightnessGrid = null;
 
     /**
@@ -57,9 +64,6 @@ public class ShellState {
         return subImgCharMatcher;
     }
 
-    public int getCharSetSize() {
-        return subImgCharMatcher.getCharset().size();
-    }
     /**
      * Gets the resolution
      * @return the resolution
@@ -94,13 +98,6 @@ public class ShellState {
         this.outputMode = outputMode;
     }
 
-    /**
-     * checks if reverse mode is on
-     * @return true if reverse mode is on, false otherwise
-     */
-    public boolean isReverseMode() {
-        return reverseMode;
-    }
 
     /**
      * sets the reverse mode

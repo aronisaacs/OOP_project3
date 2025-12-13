@@ -5,7 +5,12 @@ import ascii_art.shell_commands.*;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
+import java.util.NoSuchElementException;
+/**
+ * The Shell class represents a command-line interface for processing images into ASCII art.
+ * It allows users to input commands to manipulate the image and generate ASCII art output.
+ * @author ron.stein
+ */
 public class Shell {
     private static final String CHARS = "chars";
     private static final String ADD = "add";
@@ -26,21 +31,24 @@ public class Shell {
 
     /**
      * The main method to start the shell.
-     *
+     *main is public static to be the entry point of the program.
      * @param args from the command line
      */
-     static void main(String[] args) {
+     public static void main(String[] args) {
         new Shell().run(args[0]);
     }
 
     /**
      * Translate the commands from the user to actions.
-     *
+     * Runs on a while loop until the user gives the exit command.
      * @param imageName the file path of the image to be processed
      */
     public void run(String imageName) {
         //try to load the image and create the shell state
-        if(!initializeShellState(imageName)){
+        try {
+            initializeShellState(imageName);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
             return;
         }
         //initialize the commands map
@@ -48,7 +56,12 @@ public class Shell {
         //start the shell loop
         while (true) {
             System.out.print(">>> ");
-            String line = KeyboardInput.readLine();
+            String line;
+            try {
+                line = KeyboardInput.readLine();
+            } catch (NoSuchElementException e) {
+                break;
+            }
             line = line.trim();
             String[] tokens = line.split("\\s+");
             String commandName = tokens[0];
@@ -71,14 +84,9 @@ public class Shell {
         }
     }
 
-    private boolean initializeShellState(String imageName){
-        try {
-            Image image = new Image(imageName);
-            this.shellState = new ShellState(image);
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
+    private void initializeShellState(String imageName) throws IOException {
+        Image image = new Image(imageName);
+        this.shellState = new ShellState(image);
     }
 
     private void initializeCommandsMap() {

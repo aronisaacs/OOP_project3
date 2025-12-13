@@ -10,6 +10,9 @@ import image_char_matching.SubImgCharMatcher;
  * It separates image preprocessing (computing brightness grid) from character
  * mapping, so that brightness is only recalculated when resolution changes.
  * Charset changes are handled externally via the SubImgCharMatcher object.
+ * Additionally, the class can be fed a cached brightness grid to avoid recomputation. and can push
+ * updates via a callback.
+ * @author aronisaacs
  */
 public class AsciiArtAlgorithm {
 
@@ -46,29 +49,16 @@ public class AsciiArtAlgorithm {
     }
 
     /**
-     * Sets the resolution. Must be a power of two between 1 and the image width.
-     * Brightness grid will be recomputed on next run().
-     *
+     * Sets the resolution. Must be a positive power of two validated in the resCommand in Shell.
      * @param resolution number of characters per row
-     * @throws IllegalArgumentException if resolution is invalid
      */
     private void setResolution(int resolution) {
-        if (resolution <= 0) {
-            throw new IllegalArgumentException("Resolution must be positive");
-        }
-        if ((resolution & (resolution - 1)) != 0) { // power-of-two check
-            throw new IllegalArgumentException("Resolution must be a power of two");
-        }
-        if (resolution > image.getWidth()) {
-            throw new IllegalArgumentException("Resolution cannot exceed image width");
-        }
         this.resolution = resolution;
     }
 
 
     /**
-     * Runs the algorithm using the current resolution, charset, and rounding method.
-     *
+     * Runs the algorithm using the current resolution, charset, and brightness grid.
      * @return a 2D char array representing the ASCII art
      * @throws IllegalStateException if charset is too small
      */
@@ -111,9 +101,7 @@ public class AsciiArtAlgorithm {
 
         return ascii;
     }
-//    private void setReverseBrightness(boolean reverse) {
-//        this.reverseBrightness = reverse;
-//    }
+
     // Helper: recomputes brightness grid based on current resolution
     private double[][] computeBrightnessGrid() {
         int tilesPerRow = resolution;

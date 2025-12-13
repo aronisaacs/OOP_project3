@@ -9,6 +9,7 @@ import java.util.function.Function;
  * <p>
  * It supports adding and removing characters from the set, and automatically updates
  * brightness normalization functions accordingly.
+ * @author aronisaacs
  */
 public class SubImgCharMatcher {
 
@@ -46,13 +47,12 @@ public class SubImgCharMatcher {
      * @throws NullPointerException if c is null (autoboxed Character used incorrectly)
      */
     public void addChar(char c) {
-        // No null check needed for primitive 'char', but kept for consistency if autoboxed
-        if (c < 32 || c > 126) {
-            throw new IllegalArgumentException("Character must be printable ASCII (32–126): '" + c + "'");
+        if(!(c >= 32 && c <= 126)) {
+            throw new IllegalArgumentException();
         }
         if (charToRawBrightness.containsKey(c)) return;
 
-        // Count number of white pixels (false values)
+        // Count number of black pixels (true values)
         boolean[][] matrix = CharConverter.convertToBoolArray(c);
         int whitePixels = 0;
         for (boolean[] row : matrix) {
@@ -99,19 +99,14 @@ public class SubImgCharMatcher {
 
     /**
      * Returns the character whose brightness best matches the given normalized brightness value,
-     * according to the specified rounding method.
      * @param brightness brightness in [0,1]
      * @return closest matching character
      * @throws IllegalStateException if charset is empty
-     * @throws IllegalArgumentException if rounding method is unrecognized or null
-     * @throws NullPointerException if method is null
      */
     public char getCharByImageBrightness(double brightness) {
         if (charToRawBrightness.isEmpty()) {
             throw new IllegalStateException("Charset is empty");
         }
-//        double effectiveBrightness = reverse ? (1.0 - brightness) : brightness;
-
         int rawQuery = normalizedToRaw.apply(brightness);
 
         Integer floor = rawBrightnessMap.floorKey(rawQuery);
@@ -127,7 +122,6 @@ public class SubImgCharMatcher {
      * Returns a copy of the current charset.
      * @return TreeSet of characters currently in the matcher
      */
-    //todo this is added API!! we need to comment about it.
     public TreeSet<Character> getCharset() {
         return new TreeSet<>(charToRawBrightness.keySet());
     }

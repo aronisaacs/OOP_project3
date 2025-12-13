@@ -10,6 +10,7 @@ import java.util.TreeSet;
 public class CharsCommand implements ShellCommand{
     /**
      * Executes the 'chars' command.
+     * Prints the current set of characters used for ASCII art generation using the pretty print format.
      * @param args the arguments for the command. args[0] is the command name, usually can be ignored.
      * @param shellState the current state of the shell
      */

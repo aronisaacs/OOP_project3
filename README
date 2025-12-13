@@ -1,0 +1,27 @@
+ron.stein, aronisaacs
+209755958, 342808292
+
+1. According to the UML, briefly explain each classes' responsibility in the program.
+//The main thing you should understand is the shell state and the shell commands classes. they all implement
+the command interface, which has a single method called execute(). Other than that I didn't add many new
+classes beyond what you know of
+
+2. For every Java data structure you used, explain why you chose it and how you used it. Take into account
+time and space complexity.
+//As far as I know we only used map and set in your part of the code. I also used the TreeSet in the shell state
+in order to save the current characters.
+
+3. Explain how you used the exception handling mechanism in your program to take care of user input errors
+and how you printed them.
+//All errors are handled in the relevant classes, then they get bubbled up to the command class and from there
+to the run() method in the shell class. There is an additional ShellException class that is just used
+to indicate errors that are specific to the shell.
+
+4. If you made changes to the SubImgCharMatcher class, explain what you changed and why.
+//make sure to write about getCharSet() function in the SubImgCharMatcher file - it is used by the shell state
+to get the characters in use
+
+5. If you made changes to the classes that were given to us, explain what you changed and why. (Obviously, no
+changes can be made to anything in ascii_output package, but other classes can be changed if needed)
+//I believe we did not make any changes but you should take a look at the provided code from the moodle and
+ensure we didnt change anything in those classes.

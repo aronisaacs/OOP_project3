@@ -4,6 +4,7 @@ import image_char_matching.SubImgCharMatcher;
 
 /**
  * A shell command that removes character mappings for ASCII art generation.
+ * it extends the AddCommand to reuse character range parsing logic.
  * @author ron.stein
  */
 public class RemoveCommand extends AddCommand{
@@ -11,6 +12,7 @@ public class RemoveCommand extends AddCommand{
 
     /**
      * Executes the 'remove' command.
+     * There is all, space, and range implementation.
      * @param args the arguments for the command. args[0] is the command name, usually can be ignored.
      * @param shellState the current state of the shell
      */
